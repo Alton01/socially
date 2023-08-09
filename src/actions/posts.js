@@ -1,5 +1,5 @@
 import { FETCH_ALL, CREATE, UPDATE, DELETE, } from '../constants/actionTypes';
-import * as api from '../api';
+import * as api from '../api/index.js';
 
 //Action creators are functions that return actions
 
@@ -10,7 +10,7 @@ export const getPosts = () => async (dispatch) => {
 
         dispatch({ type: FETCH_ALL, payload: data });
     } catch (error) {
-        console.log(error.message);
+        console.log(error);
     }
 }
 
@@ -33,7 +33,7 @@ export const updatePost = (id, post) => async (dispatch) => {
         dispatch({ type: UPDATE, payload: data });
 
     } catch (error) {
-        console.log(error.message)
+        console.log(error);
     }
 }
 
