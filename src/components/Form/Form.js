@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { TextField, Button, Typography, Paper } from '@material-ui/core';
 import FileBase from 'react-file-base64';
 import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 
 import useStyles from './styles';
 import { createPost, updatePost } from '../../actions/posts';
@@ -12,15 +13,21 @@ import { createPost, updatePost } from '../../actions/posts';
 const Form = ({ currentId, setCurrentId }) => {
 
     const [postData, setPostData] = useState ({ title: '', message: '', tags: '', selectedFile: '' });
-    const post = useSelector((state) => (currentId ? state.posts.find((message) => message._id === currentId) : null));
+    const post = useSelector((state) => (currentId ? state.posts.posts.find((message) => message._id === currentId) : null));
     const dispatch = useDispatch();
     const classes = useStyles();
     const user = JSON.parse(localStorage.getItem('profile'));
+    const history = useNavigate();
 
+
+  //  useEffect(() => {
+   //     if(post) setPostData(post);
+   // }, [post]);
 
     useEffect(() => {
-        if(post) setPostData(post);
-    }, [post]);
+        if (!post?.title) clear();
+        if (post) setPostData(post);
+      }, [post]);
 
     //this ensures that after update of posts, inputs are reset.
     const clear = () => {
@@ -34,12 +41,12 @@ const Form = ({ currentId, setCurrentId }) => {
 
     //if theres a selected id, dispatch createpost, otherwise dispatch update post.
 
-        if(currentId === 0) {
-            dispatch(updatePost(currentId, { ...postData, name: user?.result?.name }));
+        if(currentId === 0) { 
+            dispatch(createPost({ ...postData, name: user?.result?.name }, history ));
             clear();  
         } else{     
-            dispatch(createPost({ ...postData, name: user?.result?.name }));
-            clear();      
+            dispatch(updatePost(currentId, { ...postData, name: user?.result?.name }));
+            clear();   
         }    
     };
 
@@ -57,7 +64,7 @@ const Form = ({ currentId, setCurrentId }) => {
 
 
  return (
-    <Paper className={classes.paper}>
+    <Paper className={classes.paper} elevation={6}>
      <form autoComplete="off" noValidate className={`${classes.root} ${classes.form}`} onSubmit={handleSubmit}>
         <Typography variant="h6">{currentId ? 'Edit' : 'Create' } a Socially</Typography>
         <TextField name="title" variant="outlined" label="Title" fullWidth value={postData.title} onChange={(e) => setPostData({ ...postData, title: e.target.value })}/>
