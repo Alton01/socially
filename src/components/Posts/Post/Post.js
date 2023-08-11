@@ -18,9 +18,13 @@ const Post = ({ post, setCurrentId }) => {
     const dispatch = useDispatch();
     const history = useNavigate();
     const user = JSON.parse(localStorage.getItem('profile'));
+    
+
+    
+    
 
     const Likes = () => {
-        if (post.likes.length > 0) {
+        if (post?.likes?.length > 0) {
           return post.likes.find((like) => like === (user?.result?.googleId || user?.result?._id))
             ? (
               <><ThumbUpAltIcon fontSize="small" />&nbsp;{post.likes.length > 2 ? `You and ${post.likes.length - 1} others` : `${post.likes.length} like${post.likes.length > 1 ? 's' : ''}` }</>
@@ -67,7 +71,7 @@ const Post = ({ post, setCurrentId }) => {
 
                 {(user?.result?.googleId === post?.creator || user?.result?._id === post?.creator) && (
                     <Button size="small" color="primary" onClick={() => dispatch(deletePost(post._id))}>
-                    <DeleteIcon fontSize="small" />
+                    <DeleteIcon fontSize="small" />&nbsp;
                     Delete
                 </Button>   
                 )}

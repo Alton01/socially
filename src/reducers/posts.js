@@ -1,4 +1,4 @@
-import { FETCH_ALL, CREATE, UPDATE, DELETE, FETCH_BY_SEARCH, FETCH_POST, START_LOADING, END_LOADING } from '../constants/actionTypes';
+import { FETCH_ALL, CREATE, UPDATE, DELETE, FETCH_BY_SEARCH, FETCH_POST, COMMENT } from '../constants/actionTypes';
 
 
 export default (state = { isLoading: true, posts: [] }, action) => {
@@ -14,7 +14,16 @@ export default (state = { isLoading: true, posts: [] }, action) => {
                   currentPage: action.payload.currentPage,
                   numberOfPages: action.payload.numberOfPages,
                 };
-
+                case COMMENT:
+                    return {
+                      ...state,
+                      posts: state.posts.map((post) => {
+                        if (post._id === action.payload._id) {
+                          return action.payload;
+                        }
+                        return post;
+                      }),
+                    };
         case FETCH_BY_SEARCH: 
             return { ...state, posts: action.payload.data };
             case FETCH_POST:
